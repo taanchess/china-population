@@ -635,7 +635,6 @@ body { background: var(--ground); color: var(--ink); font-family: var(--f); font
 #stage { position: absolute; inset: 0; }
 #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; outline: none; }
 #gl:active { cursor: grabbing; }
-#gl:focus-visible { box-shadow: inset 0 0 0 2px var(--pen); }
 button, select { font-family: var(--f); }
 button:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
 .u { position: relative; white-space: nowrap; }
@@ -866,6 +865,11 @@ h1 .nw { white-space: nowrap; }
 .tc b { display: inline-block; min-width: 2.5em; }
 .nhl { position: absolute; left: 0; top: 0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; pointer-events: none; z-index: 0; opacity: 0; transition: opacity .2s; }
 .nhl.on { opacity: .7; }
+/* the map is a drag surface: no focus frame on click, no text selection while flying (text stays selectable in the sources) */
+#gl:focus { outline: none; }
+#gl:focus-visible { outline: none; }
+.app { -webkit-user-select: none; user-select: none; }
+.drawer, .drawer * { -webkit-user-select: text; user-select: text; }
 </style>
 
 </head>
@@ -1524,6 +1528,7 @@ void main(){
   const touched = () => { fly = null; stopTour(); userTouched = true; $("help").style.opacity = 0; };
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   canvas.addEventListener("pointerdown", (e) => {
+    e.preventDefault(); // dragging the map must not start a text selection in the plates
     canvas.focus({ preventScroll: true }); canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.offsetX, e.offsetY]);
     drag = { x: e.offsetX, y: e.offsetY, x0: e.offsetX, y0: e.offsetY, pan: e.button === 2 || e.shiftKey, moved: false, pinch: null };
     if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag.pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), mx: (a[0] + b[0]) / 2, my: (a[1] + b[1]) / 2 }; }
