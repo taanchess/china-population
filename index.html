@@ -2,6 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Население Китая с 1949 года</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -629,7 +630,7 @@
   --t-xs: 12px; --t-s: 13px; --t-m: 14px; --t-l: 16px;
   color-scheme: dark;
 }
-html, body { height: 100%; }
+html, body { height: 100%; margin: 0; padding: 0; }
 body { background: var(--ground); color: var(--ink); font-family: var(--f); font-size: var(--t-m); overflow: hidden; }
 .app { position: relative; height: 100%; overflow: hidden; background: var(--ground); }
 #stage { position: absolute; inset: 0; }
@@ -866,8 +867,8 @@ h1 .nw { white-space: nowrap; }
 .nhl { position: absolute; left: 0; top: 0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; pointer-events: none; z-index: 0; opacity: 0; transition: opacity .2s; }
 .nhl.on { opacity: .7; }
 /* the map is a drag surface: no focus frame on click, no text selection while flying (text stays selectable in the sources) */
-#gl:focus { outline: none; }
-#gl:focus-visible { outline: none; }
+#gl, #gl:focus, #gl:focus-visible { outline: none !important; -webkit-tap-highlight-color: transparent; }
+.app { -webkit-tap-highlight-color: transparent; }
 .app { -webkit-user-select: none; user-select: none; }
 .drawer, .drawer * { -webkit-user-select: text; user-select: text; }
 </style>
@@ -1218,7 +1219,7 @@ h1 .nw { white-space: nowrap; }
   const popAt = (y) => popRows.find((d) => d.year === Math.floor(y));
   const events = EVENTS.map((e) => ({ ...e, year: +e.year, year_end: +e.year_end })).filter((e) => e.year >= 1949).sort((a, b) => a.year - b.year);
 
-  const st = { who: "old", how: "share", want: "old_share", census: "2020", metric: "old_share", mode: "auto", year: 2020, playing: false, speed: 1, hover: -1, pinned: -1, ev: null, forced: null };
+  const st = { who: "all", how: "n", want: "pop", census: "2020", metric: "pop", mode: "auto", year: Y0, playing: false, speed: 1, hover: -1, pinned: -1, ev: null, forced: null };
 
   /* ================= color & height ================= */
   const RAMP = ["#17284b", "#154284", "#1d5eb9", "#407be3", "#6f9afe", "#a0baff", "#d0dcff"]; // the hue of the ink marks (#5e93ff), lightness only
@@ -1529,7 +1530,8 @@ void main(){
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
   canvas.addEventListener("pointerdown", (e) => {
     e.preventDefault(); // dragging the map must not start a text selection in the plates
-    canvas.focus({ preventScroll: true }); canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.offsetX, e.offsetY]);
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur(); // no focus ring anywhere after a click on the map
+    canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.offsetX, e.offsetY]);
     drag = { x: e.offsetX, y: e.offsetY, x0: e.offsetX, y0: e.offsetY, pan: e.button === 2 || e.shiftKey, moved: false, pinch: null };
     if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag.pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), mx: (a[0] + b[0]) / 2, my: (a[1] + b[1]) / 2 }; }
   });
@@ -1555,13 +1557,15 @@ void main(){
   canvas.addEventListener("pointerup", endPtr); canvas.addEventListener("pointercancel", endPtr);
   canvas.addEventListener("pointerleave", () => { mouseXY = null; dirty = true; if (!drag && st.hover !== -1) { st.hover = -1; updateDetail(); dirty = true; } });
   canvas.addEventListener("wheel", (e) => { e.preventDefault(); touched(); cam.dist *= Math.exp(e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0014)); clampCam(); dirty = true; }, { passive: false });
-  canvas.addEventListener("keydown", (e) => {
+  const mapKeys = (e) => e.target === canvas || e.target === document.body;
+  document.addEventListener("keydown", (e) => {
+    if (!mapKeys(e)) return;
     const k = e.key.toLowerCase();
     if (["w", "a", "s", "d", "q", "e", "arrowup", "arrowdown", "arrowleft", "arrowright", "+", "=", "-"].includes(k)) { e.preventDefault(); keys.add(k); touched(); }
     if (k === "r") home(); if (k === "escape") { st.pinned = -1; updateDetail(); dirty = true; }
   });
-  canvas.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
-  canvas.addEventListener("blur", () => keys.clear());
+  document.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
+  window.addEventListener("blur", () => keys.clear());
   function keyMove() {
     const sp = 10;
     if (keys.has("w") || keys.has("arrowup")) panBy(0, sp); if (keys.has("s") || keys.has("arrowdown")) panBy(0, -sp);
@@ -2049,7 +2053,7 @@ nn.textContent = typo(T(`Белая точка — выбранный год. Л
   window.addEventListener("resize", () => { resize(); drawTrack(); });
   if (window.ResizeObserver) new ResizeObserver(() => drawTrack()).observe($("track"));
   document.addEventListener("fullscreenchange", () => setTimeout(() => { resize(); drawTrack(); }, 60));
-  setYear(2020, true);
+  setYear(Y0, true); // opens at the start of the story: 1949, all ages, head count
   hCur.fill(0);
   flyCam(HOME, 2600);
   setTimeout(() => { $("help").style.opacity = 0; }, 12000);
