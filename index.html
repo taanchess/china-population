@@ -809,7 +809,7 @@ details.more[open] summary::after { content: "Скрыть"; }
 
 .drawer { position: absolute; z-index: 20; inset: 0; background: rgba(0,0,0,.55); display: flex; justify-content: flex-end; }
 .drawer[hidden] { display: none; }
-.drawer .in { width: min(560px, 100%); height: 100%; overflow: auto; background: var(--plate); padding: calc(24px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 32px 24px; }
+.drawer .in { box-sizing: border-box; width: min(560px, 100%); height: 100%; overflow: auto; overscroll-behavior: contain; background: var(--plate); padding: calc(24px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) 32px 24px; }
 .drawer h3 { font-weight: 700; font-size: 32px; margin: 0 0 var(--s2); }
 .drawer h4 { font-size: var(--t-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: var(--s5) 0 var(--s2); }
 .drawer p, .drawer li { line-height: 1.5; font-size: var(--t-m); max-width: 64ch; }
