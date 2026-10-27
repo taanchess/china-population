@@ -661,12 +661,12 @@ h1 { font-weight: 700; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.12; m
 .kicker { font-size: var(--t-m); line-height: 1.5; color: var(--soft); margin: var(--s3) 0 0; }
 .when { display: flex; align-items: center; gap: var(--s5); }
 .yw { position: relative; padding: 0 var(--s2); flex: none; }
-.yw .y { font-weight: 700; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+.yw .y { font-weight: 500; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
 .yw .ring { position: absolute; left: -8px; top: -12px; width: calc(100% + 16px); height: calc(100% + 24px); overflow: visible; pointer-events: none; }
 .when .s { font-size: var(--t-s); line-height: 1.4; color: var(--muted); }
 .when .s b { display: block; color: var(--pen); font-size: var(--t-xs); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
 .key .dv { display: flex; gap: var(--s4); margin-top: var(--s1); font-size: var(--t-s); color: var(--muted); align-items: baseline; }
-.key .dv b { font-size: 32px; font-weight: 700; color: var(--ink); margin-right: var(--s1); font-variant-numeric: tabular-nums; }
+.key .dv b { font-size: 32px; font-weight: 500; color: var(--ink); margin-right: var(--s1); font-variant-numeric: tabular-nums; }
 .key .dv span:first-child b { color: var(--pen); }
 .key svg { width: 100%; height: 88px; display: block; margin-top: var(--s2); overflow: visible; }
 .key .sw { display: inline-block; width: 16px; height: 3px; margin-right: var(--s2); vertical-align: middle; }
@@ -685,7 +685,7 @@ details.more[open] summary::after { content: "Скрыть"; }
 .nat .v small { font-size: var(--t-xs); font-weight: 400; color: var(--muted); }
 .nat .v .nd { color: var(--muted); font-weight: 400; }
 .work .wv { display: flex; align-items: baseline; gap: var(--s1); margin-top: var(--s1); font-size: var(--t-s); color: var(--muted); font-variant-numeric: tabular-nums; }
-.work .wv b { font-size: 32px; font-weight: 700; color: var(--ink); }
+.work .wv b { font-size: 32px; font-weight: 500; color: var(--ink); }
 .work .wv span { margin-left: var(--s2); }
 .bnbar { position: relative; height: 4px; margin: var(--s2) 0 18px; background: var(--plate-2); }
 .bnbar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--pen); }
@@ -737,7 +737,7 @@ details.more[open] summary::after { content: "Скрыть"; }
 .app.inspect .panel, .app.inspect .ev, .app.inspect .evlink { display: none !important; }
 .detail .nm { font-weight: 700; font-size: 24px; line-height: 1.15; padding-right: 40px; }
 .detail .sub { font-size: var(--t-xs); color: var(--muted); margin-top: var(--s1); line-height: 1.4; }
-.detail .big { font-weight: 700; font-size: 32px; margin-top: var(--s3); font-variant-numeric: tabular-nums; }
+.detail .big { font-weight: 500; font-size: 32px; margin-top: var(--s3); font-variant-numeric: tabular-nums; }
 .detail .note2 { font-size: var(--t-xs); color: var(--muted); line-height: 1.4; margin-top: var(--s1); }
 .detail h4 { font-size: var(--t-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin: var(--s4) 0 var(--s2); }
 .detail svg { width: 100%; display: block; }
@@ -752,7 +752,7 @@ details.more[open] summary::after { content: "Скрыть"; }
 .agenow { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-top: var(--s2); }
 .agenow div { display: flex; flex-direction: column; font-size: var(--t-xs); color: var(--muted); }
 .agenow i { width: 12px; height: 4px; margin-bottom: var(--s1); }
-.agenow b { font-size: 20px; color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.agenow b { font-size: 20px; color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
 .agenow small { font-size: var(--t-xs); color: var(--muted); }
 .dctl { display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s4); }
 .segs button small { display: block; font-size: var(--t-xs); font-weight: 400; color: var(--muted); margin-top: 2px; }
@@ -991,6 +991,7 @@ h1 .nw { white-space: nowrap; }
       </ul>
       <h4>Как читать карту</h4>
       <ul>
+        <li>«Численность» — сколько людей выбранной группы живёт в регионе. «Доля от населения» — какая часть жителей самого региона относится к этой группе. Пример, перепись 2000 года: в Шаньдуне 64,6 млн человек рабочего возраста из 90,8 млн жителей (71%), в Пекине — 10,8 млн из 13,8 млн (78%). Людей рабочего возраста больше в Шаньдуне, а их доля выше в Пекине: в столицу приезжают работать взрослые, а детей там мало.</li>
         <li>Для возрастных групп между переписями значения расчётные (плавный переход от одной переписи к другой), после 2020 года — перепись 2020. Без военнослужащих; Гонконг, Макао и Тайвань в переписи КНР не входят.</li>
         <li>Границы — упрощённый открытый набор Apache ECharts, проекция Альберса.</li>
       </ul>
@@ -1027,6 +1028,7 @@ h1 .nw { white-space: nowrap; }
       </ul>
       <h4>如何阅读地图</h4>
       <ul>
+        <li>“人口数”是该群体在本地区的人数；“占总人口比重”是本地区居民中属于该群体的比例。例如2000年普查：山东15–64岁人口6460万，占全省9080万人口的71%；北京为1080万，占1380万的78%。山东的劳动年龄人口更多，但北京的比重更高：成年人到首都工作，而北京的儿童很少。</li>
         <li>两次普查之间的年龄结构为估算值（从一次普查平滑过渡到下一次），2020年以后为2020年普查数据。不含现役军人；香港、澳门和台湾不在普查范围内。</li>
         <li>边界为 Apache ECharts 简化开放数据，阿尔伯斯投影。</li>
       </ul>
@@ -1427,7 +1429,7 @@ void main(){
     const fmtT = (v) => (sc.em === "growth" ? fmt("growth", v) : chg ? (METRICS[sc.em].share ? fPP(v) : fSMln(v)) : METRICS[sc.em].share ? fP0(v) : LANG === "zh" ? fMln(v) : L.format(",.3~")(v / 1e6) + " млн");
     [sc.th[0], sc.th[Math.floor(sc.th.length / 2)], sc.th[sc.th.length - 1]].forEach((v, i) => { const s = document.createElement("span"); s.textContent = (i === 0 ? "< " : i === 2 ? "> " : "") + fmtT(v); ticks.appendChild(s); });
     const na = document.createElement("div"); na.className = "na"; na.innerHTML = "<i></i>"; na.append(T("нет данных (или не входит в переписи КНР)", "无数据（或不在中国大陆普查范围内）"));
-    const hint = document.createElement("div"); hint.className = "na"; hint.textContent = sc.em === "growth" ? T("Синий — население выросло за год, серый — сократилось. Высота — сила изменения", "蓝色：比上年增加，灰色：减少。柱高表示变化幅度") : chg ? T("Синий — рост, серый — убыль", "蓝色：增加，灰色：减少") : "";
+    const hint = document.createElement("div"); hint.className = "na"; hint.textContent = sc.em === "growth" ? T("Синий — население выросло за год, серый — сократилось. Высота — сила изменения", "蓝色：比上年增加，灰色：减少。柱高表示变化幅度") : chg ? T("Синий — рост, серый — убыль", "蓝色：增加，灰色：减少") : METRICS[sc.em].share ? T("Процент считается от жителей самого региона, а не всей страны. Поэтому небольшой Пекин может быть выше огромного Шаньдуна", "比重按本地区人口计算，而不是全国。因此人口不多的北京可能高于人口众多的山东") : "";
     lg.append(t, steps, ticks, na); if (hint.textContent) lg.append(hint); typoTree(lg);
   }
 
