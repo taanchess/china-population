@@ -872,6 +872,9 @@ h1 .nw { white-space: nowrap; }
 .app { -webkit-tap-highlight-color: transparent; }
 .app { -webkit-user-select: none; user-select: none; }
 .drawer, .drawer * { -webkit-user-select: text; user-select: text; }
+/* on a wide screen the map panel or the region card already carries this note; the story repeats it only on phones */
+@media (min-width: 761px) { #storyNote { display: none !important; } }
+#storyNote[hidden], #ctlNote[hidden] { display: none; }
 </style>
 
 </head>
@@ -892,7 +895,7 @@ h1 .nw { white-space: nowrap; }
       <div class="yw"><div class="y" id="clockY">2020</div><svg class="ring" id="clockRing" aria-hidden="true"></svg></div>
       <div class="s" id="clockCh"></div>
     </div>
-    <div class="snote" id="storyNote" hidden></div>
+    <div class="note" id="storyNote" hidden></div>
     <div class="work">
       <div class="cap" data-zh="劳动年龄人口（15–64岁）">Рабочий возраст, 15–64 лет</div>
       <div class="wv"><b id="natWork">—</b> <i id="natU">млрд</i> <span id="natOf"></span></div>
@@ -1624,6 +1627,15 @@ void main(){
     el.innerHTML = "";
     opts.forEach(([v, l, sub]) => { const b = document.createElement("button"); b.type = "button"; b.textContent = l; if (sub) { const sm = document.createElement("small"); sm.textContent = sub.replace(/ /g, "\u00a0"); b.appendChild(sm); } b.setAttribute("aria-pressed", String(cur === v)); b.onclick = () => on(v); el.appendChild(b); });
   }
+  // one note for "this group has no data here": the same words and the same button wherever it appears
+  function fillGapNote(el, g) {
+    el.innerHTML = "";
+    const t = document.createElement("div"); t.textContent = typo(T(`${g.text} Поэтому сейчас на карте всё население, а не выбранная группа.`, `${g.text}因此地图目前显示总人口，而不是所选群体。`));
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn";
+    b.textContent = g.go ? T(`Перейти к ${g.go} году`, `跳到${g.go}年`) : g.census ? T("Открыть перепись 2000", "打开2000年普查") : T("Включить «По году»", "切换到“按年份”");
+    b.onclick = () => { fixGap(); changed(); };
+    el.append(t, b);
+  }
   function refreshControls(force) {
     resolve();
     const g = gap(st.want);
@@ -1636,14 +1648,8 @@ void main(){
     const cs = $("selCensus"); cs.hidden = cur !== "census";
     cs.innerHTML = ""; CENSUS_YEARS.forEach((y) => { const o = document.createElement("option"); o.value = y; o.textContent = T(`Перепись ${y} года`, `${y}年普查`); cs.appendChild(o); });
     cs.value = st.census;
-    const sn = $("storyNote"); sn.hidden = !g; if (g) sn.textContent = typo(T(`${g.text} Сейчас на карте — всё население.`, `${g.text}地图目前显示总人口。`));
-    const n = $("ctlNote"); n.innerHTML = ""; n.hidden = !g;
-    if (g) {
-      const p = document.createElement("div"); p.textContent = T("Для этого года нет данных по выбранной группе.", "这一年没有所选群体的数据。"); n.appendChild(p);
-      const b = document.createElement("button"); b.type = "button"; b.className = "btn";
-      b.textContent = g.go ? T(`Перейти к ${g.go} году`, `跳到${g.go}年`) : g.census ? T("Открыть перепись 2000", "打开2000年普查") : T("Включить «По году»", "切换到“按年份”");
-      b.onclick = () => { fixGap(); changed(); }; n.appendChild(b);
-    }
+    const sn = $("storyNote"); sn.hidden = !g; if (g) fillGapNote(sn, g);
+    const n = $("ctlNote"); n.hidden = !g; if (g) fillGapNote(n, g); else n.innerHTML = "";
     typoTree($("panel"));
   }
   function changed() { refreshControls(true); applyTargets(); updateClock(); updateDetail(); }
@@ -1695,13 +1701,7 @@ void main(){
       }
     }
     const gp = gap(st.want);
-    if (gp) {
-      const n = document.createElement("div"); n.className = "note";
-      const t = document.createElement("div"); t.textContent = typo(T(`${gp.text} Поэтому сейчас показано всё население, а не выбранная группа.`, `${gp.text}因此目前显示的是总人口，而不是所选群体。`));
-      const b = document.createElement("button"); b.type = "button"; b.className = "btn"; b.textContent = gp.go ? T(`Перейти к ${gp.go} году`, `跳到${gp.go}年`) : gp.census ? T("Открыть перепись 2000", "打开2000年普查") : T("Включить «По году»", "切换到“按年份”");
-      b.onclick = () => { fixGap(); changed(); };
-      n.append(t, b); det.appendChild(n);
-    }
+    if (gp) { const n = document.createElement("div"); n.className = "note"; fillGapNote(n, gp); det.appendChild(n); }
     if (r.grp) { const g = document.createElement("div"); g.className = "note2"; g.textContent = T(`В ${r.ca} году — в составе общей единицы: ${GROUP_NAME(r.grp)}.`, `${r.ca}年为合并统计单位：${GROUP_NAME(r.grp)}。`); det.appendChild(g); }
     // annual population history 1949–2013 + census 2020
     const h4 = document.createElement("h4"); h4.textContent = T("Население по годам, млн", "历年人口"); det.appendChild(h4);
